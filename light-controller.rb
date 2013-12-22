@@ -13,6 +13,7 @@ module LightController
   class << self
     # Performs basic initialization
     def init
+      @debug_pins = {}
       set_modes
       reset
     end
@@ -61,6 +62,7 @@ module LightController
     # cycles through a list of colors waiting
     # [delay] seconds between each
     def cycle colors=[], delay=0.5
+      reset_pins
       @thread = Thread.new do
         i = 0
         loop do
@@ -89,11 +91,19 @@ module LightController
       exec "gpio -g mode #{pin} #{mode}"
     end
 
-    def set_pin pin, color
-      exec "gpio -g write #{pin} #{color}"
+    def set_pin pin, state
+      if @debug
+        @debug_pins[pin] = state
+      end
+
+      exec "gpio -g write #{pin} #{state}"
     end
 
     def get_pin pin
+      if @debug
+        return @debug_pins[pin] == 1
+      end
+
       return exec("gpio -g read #{pin}").strip.to_i == 1
     end
 
@@ -113,6 +123,5 @@ module LightController
     end
   end
 end
-
 
 LightController.init
