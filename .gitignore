@@ -1,4 +1,5 @@
 auth.yml
+nohup.out
 
 # Generic ruby stuff
 *.gem
