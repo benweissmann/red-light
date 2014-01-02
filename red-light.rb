@@ -5,6 +5,11 @@ require 'sinatra'
 require 'light-controller'
 require 'yaml'
 
+
+set :environment, :production
+set :port, 80
+set :bind, '0.0.0.0'
+
 COLORS = {
   nil                            => "off",
   LightController::RED           => "red",
