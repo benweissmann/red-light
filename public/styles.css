@@ -20,6 +20,7 @@ p.color {
     margin: 50px;
     float: left;
     cursor: pointer;
+    border: 5px solid white;
 }
 
 .off {
@@ -60,4 +61,31 @@ p.color {
 .unkown {
     background-color: #666666;
     color: white;
+}
+
+
+@-webkit-keyframes pulse {
+    0%   {background-color: #ff0000;}
+    17%  {background-color: #ff9900;}
+    34%  {background-color: #ffff00;}
+    50%  {background-color: #00ff00;}
+    67%  {background-color: #0000ff;}
+    84%  {background-color: #660099;}
+    100% {background-color: #ff0000;}
+}
+
+@keyframes pulse {
+    0%   {background-color: #ff0000;}
+    17%  {background-color: #ff9900;}
+    34%  {background-color: #ffff00;}
+    50%  {background-color: #00ff00;}
+    67%  {background-color: #0000ff;}
+    84%  {background-color: #660099;}
+    100% {background-color: #ff0000;}
+}
+
+.rainbow {
+    -webkit-animation: pulse 5s infinite normal;
+    animation: pulse 5s infinite normal;
+    color: black;
 }

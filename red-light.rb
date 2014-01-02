@@ -13,7 +13,8 @@ COLORS = {
   LightController::GREEN         => "green",
   LightController::BLUE          => "blue",
   LightController::PURPLE        => "purple",
-  LightController::INVALID_STATE => "unkown"
+  LightController::INVALID_STATE => "unkown",
+  LightController::CYCLING       => "rainbow"
 }
 
 AUTH_CONFIG = DB_PARAMS = YAML::load(File.open(File.join(File.dirname(__FILE__), 'auth.yml')))
@@ -53,7 +54,13 @@ post '/admin' do
   protected!
 
   begin
-    LightController.set_color params['color'].to_i
+    if params['color'] == "off"
+      LightController.reset
+    elsif params['color'] == "rainbow"
+      LightController.rainbow
+    else
+      LightController.set_color params['color'].to_i
+    end
   rescue
     return "Invalid request"
   end

@@ -1,3 +1,8 @@
 - LightController::COLORS.each do |color|
   %form{method: "post", class: "color-choice #{COLORS[color]}", onclick: "this.submit()"}
     %input{type: "hidden", name: "color", value: color}
+%form{method: "post", class: "color-choice off", onclick: "this.submit()"}
+  %input{type: "hidden", name: "color", value: "off"}
+%form{method: "post", class: "color-choice rainbow", onclick: "this.submit()"}
+  %input{type: "hidden", name: "color", value: "rainbow"}
+

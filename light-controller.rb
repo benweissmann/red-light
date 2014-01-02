@@ -8,6 +8,8 @@ module LightController
 
   INVALID_STATE = -1
 
+  CYCLING = -2
+
   COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]
 
   class << self
@@ -19,19 +21,24 @@ module LightController
     end
 
     # Sets the color. You MUST pass in one of the
-    # above constants.
+    # above color constants.
     def set_color color
       unless COLORS.include? color
         raise "Invalid color: #{color}"
       end
-      reset_pins
-      set_pin color, 1
+      reset
+      set_color_raw color
     end
 
     # Gets the color. Return nil for no color on,
     # INVALID_STATE if multiple colors are on,
-    # else one of the above constants.
+    # CYCLING if the colors are cycling,
+    # else one of the above color constants.
     def get_color
+      if @thread
+        return CYCLING
+      end
+
       pins = COLORS.select do |pin|
         get_pin pin
       end
@@ -49,6 +56,7 @@ module LightController
     def reset
       if @thread
         Thread.kill @thread
+        @thread = nil
       end
 
       reset_pins
@@ -62,11 +70,16 @@ module LightController
     # cycles through a list of colors waiting
     # [delay] seconds between each
     def cycle colors=[], delay=0.5
-      reset_pins
+      unless colors.all? {|c| COLORS.include? c}
+        raise "Invalid color"
+      end
+
+      reset
+
       @thread = Thread.new do
         i = 0
         loop do
-          set_color colors[i]
+          set_color_raw colors[i]
           i = (i+1) % colors.length
           sleep delay
         end
@@ -120,6 +133,11 @@ module LightController
       COLORS.each do |pin|
         set_pin pin, 0
       end
+    end
+
+    def set_color_raw color
+      reset_pins
+      set_pin color, 1
     end
   end
 end
